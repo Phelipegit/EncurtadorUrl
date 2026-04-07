@@ -26,10 +26,10 @@ public class EntityUrl {
 
     private LocalDate date;
 
-    public EntityUrl(String url, String urlEncurtada, LocalDate date) {
+    public EntityUrl(String url, String urlEncurtada) {
         this.url = url;
         this.urlEncurtada = urlEncurtada;
-        this.date = date;
+        this.date = LocalDate.now();
     }
 
     public EntityUrl() {

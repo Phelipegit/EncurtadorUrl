@@ -4,7 +4,6 @@ import PhelipeProject.EncurtadorDeUrl.dto.RequestUrl;
 import PhelipeProject.EncurtadorDeUrl.dto.ResponseUrl;
 import PhelipeProject.EncurtadorDeUrl.service.ServiceUrl;
 import jakarta.validation.Valid;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -22,5 +21,10 @@ public class UrlController {
     @PostMapping("/add")
     public ResponseUrl addUrlEncurtada(@Valid @RequestBody RequestUrl requestUrl) throws IOException, InterruptedException {
         return serviceUrl.urlEncurtadaBanco(requestUrl);
+    }
+
+    @DeleteMapping("/remove")
+    public ResponseUrl removeUrlEncurtada(@Valid @RequestBody RequestUrl requestUrl) {
+        return serviceUrl.removeUrlEncurtada(requestUrl);
     }
 }

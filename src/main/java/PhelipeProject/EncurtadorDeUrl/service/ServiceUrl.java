@@ -5,16 +5,11 @@ import PhelipeProject.EncurtadorDeUrl.dto.RequestUrl;
 import PhelipeProject.EncurtadorDeUrl.dto.ResponseUrl;
 import PhelipeProject.EncurtadorDeUrl.entity.EntityUrl;
 import PhelipeProject.EncurtadorDeUrl.repository.RepositoryUrl;
-import jakarta.persistence.Entity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
-import java.sql.Date;
-import java.time.LocalDate;
 import java.util.Optional;
-import java.util.concurrent.Future;
 
 @Service
 public class ServiceUrl {
@@ -29,22 +24,37 @@ public class ServiceUrl {
 
     public ResponseUrl urlEncurtadaBanco(RequestUrl url) throws IOException, InterruptedException {
 
+        Optional<EntityUrl> exist = repositoryUrl.findByUrl(url.getUrl());
+
+        if(exist.isPresent()) {
+            return new ResponseUrl(false, "Url encurtada já existe");
+        }
+
         ObjectMapper objectMapper = new ObjectMapper();
 
         String json = obterUrlEncurtada.obterUrl(url.getUrl());
 
         RecordUrlEncurtada record = objectMapper.readValue(json, RecordUrlEncurtada.class);
 
-        EntityUrl entityUrl = new EntityUrl(url.getUrl(),record.urlEncurtada(),LocalDate.now());
-
-        Optional<EntityUrl> exist = repositoryUrl.findByUrl(url.getUrl());
-
-        if(exist.isPresent()) {
-            return new ResponseUrl(false,"URL encurtada já existe");
-        }
+        EntityUrl entityUrl = new EntityUrl(url.getUrl(),record.urlEncurtada());
 
         repositoryUrl.save(entityUrl);
 
         return new ResponseUrl(true,record.urlEncurtada());
+    }
+
+    public ResponseUrl removeUrlEncurtada(RequestUrl url) {
+
+        Optional<EntityUrl> exist = repositoryUrl.findByUrl(url.getUrl());
+
+        if(exist.isEmpty()) {
+            return new ResponseUrl(false, "Url não existe");
+        }
+
+        EntityUrl entity = exist.get();
+
+        repositoryUrl.deleteById(entity.getId());
+
+        return new ResponseUrl(true, "Url removida com sucesso");
     }
 }
