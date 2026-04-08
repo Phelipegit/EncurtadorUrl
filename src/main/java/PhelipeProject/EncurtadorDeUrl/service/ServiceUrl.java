@@ -57,4 +57,10 @@ public class ServiceUrl {
 
         return new ResponseUrl(true, "Url removida com sucesso");
     }
+
+    public ResponseUrl removeAllUrls() {
+        repositoryUrl.deleteAll();
+
+        return new ResponseUrl(true, "Todas as urls foram removidas com sucesso");
+    }
 }

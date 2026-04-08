@@ -27,4 +27,9 @@ public class UrlController {
     public ResponseUrl removeUrlEncurtada(@Valid @RequestBody RequestUrl requestUrl) {
         return serviceUrl.removeUrlEncurtada(requestUrl);
     }
+
+    @DeleteMapping("/remove/all")
+    public ResponseUrl removeAllUrls() {
+        return serviceUrl.removeAllUrls();
+    }
 }
